@@ -1,3 +1,4 @@
+import time
 from fastapi import HTTPException
 
 from modules.diffeq.core.solvers.base import BaseSolver
@@ -30,6 +31,7 @@ class DiffEqService:
             raise HTTPException(500, "Method not implemented")
 
         try:
+            start_time = time.perf_counter()
             res = solver.solve()
             res_data = DiffEqData(
                 points=PointsListDTO(root=[PointDTO(x=p.x, y=p.y) for p in res.points])
@@ -39,7 +41,7 @@ class DiffEqService:
                 success=True,
                 message=None,
                 data=res_data,
-                time_ms=0.0,
+                time_ms=(time.perf_counter() - start_time) * 1000,
             )
         except ValueError as e:
             return DiffEqResponse(
