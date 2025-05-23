@@ -1,6 +1,7 @@
 import time
 from fastapi import HTTPException
 
+from modules.diffeq.core.solvers.adams import AdamsSolver
 from modules.diffeq.core.solvers.base import BaseSolver
 from modules.diffeq.core.solvers.euler import EulerSolver
 from modules.diffeq.core.solvers.mod_euler import ModEulerSolver
@@ -26,6 +27,8 @@ class DiffEqService:
             solver = ModEulerSolver(fn, point, data.h, data.steps)
         elif data.method == DiffEqMethod.RK4:
             solver = RK4Solver(fn, point, data.h, data.steps)
+        elif data.method == DiffEqMethod.ADAMS:
+            solver = AdamsSolver(fn, point, data.h, data.steps)
 
         if solver is None:
             raise HTTPException(500, "Method not implemented")
