@@ -3,6 +3,7 @@ import { Dropdown } from "react-bootstrap";
 import { useAppDispatch } from "src/store";
 import {
   setH,
+  setRealFExpr,
   setSourceFExpr,
   setStartingPoint,
   setSteps,
@@ -28,6 +29,7 @@ const ImportPreset: React.FC<ImportPresetProps> = ({ onSelect }) => {
               dispatch(setStartingPoint(params.startingPoint));
               dispatch(setH(params.h));
               dispatch(setSteps(params.steps));
+              dispatch(setRealFExpr(params.realFExpr));
               onSelect();
             }}
           >

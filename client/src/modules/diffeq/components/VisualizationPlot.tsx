@@ -1,13 +1,37 @@
 import React, { useMemo } from "react";
 import Plot from "react-plotly.js";
 
+import Decimal from "decimal.js";
 import { DiffEqResponse } from "../api/types";
+import { fExprToFunction, generatePoints } from "../utils/utils";
 
 interface VisualizationPlotProps {
   result: DiffEqResponse | null;
+  realFExpr?: string | null;
 }
 
-const VisualizationPlot: React.FC<VisualizationPlotProps> = ({ result }) => {
+const VisualizationPlot: React.FC<VisualizationPlotProps> = ({
+  result,
+  realFExpr,
+}) => {
+  const realFn = useMemo(() => {
+    if (!realFExpr) return null;
+    try {
+      return fExprToFunction(realFExpr);
+    } catch {
+      return null;
+    }
+  }, [realFExpr]);
+  const { xs: realFnXs, ys: realFnYs } = useMemo(() => {
+    if (!realFn || !result?.success) return { xs: [], ys: [] };
+    const points = generatePoints(
+      realFn,
+      new Decimal(Math.min(...result.data.points.map((p) => +p.x))),
+      new Decimal(Math.max(...result.data.points.map((p) => +p.x))),
+    );
+    return points;
+  }, [realFn, result]);
+
   const plotData = useMemo(() => {
     const ans: Plotly.Data[] = [];
 
@@ -22,8 +46,19 @@ const VisualizationPlot: React.FC<VisualizationPlotProps> = ({ result }) => {
       });
     }
 
+    if (realFExpr) {
+      ans.push({
+        x: realFnXs.map((x) => x.toString()),
+        y: realFnYs.map((y) => y.toString()),
+        type: "scatter",
+        mode: "lines",
+        line: { color: "red" },
+        name: "ф(x) (реальное)",
+      });
+    }
+
     return ans;
-  }, [result]);
+  }, [realFExpr, realFnXs, realFnYs, result]);
 
   return (
     <Plot

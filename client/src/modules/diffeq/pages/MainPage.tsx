@@ -1,5 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 
+import ExtrasBlock from "../components/ExtrasBlock";
 import ImportModal from "../components/ImportModal";
 import ParamsBlock from "../components/ParamsBlock";
 import SimulateButton from "../components/SimulateButton";
@@ -13,6 +14,8 @@ const MainPage = () => {
         <Col md={6} lg={4}>
           <ParamsBlock />
           <SimulateButton />
+          <hr />
+          <ExtrasBlock />
 
           <ImportModal />
         </Col>

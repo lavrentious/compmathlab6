@@ -10,6 +10,7 @@ interface SimulationState {
     steps: number;
     startingPoint: Point;
   };
+  realFExpr: string | null;
   result: DiffEqResponse | null;
   importModalShown: boolean;
 }
@@ -22,6 +23,7 @@ const initialState: SimulationState = {
     steps: 2,
     startingPoint: { x: "0", y: "0" },
   },
+  realFExpr: null,
   result: null,
   importModalShown: false,
 };
@@ -51,6 +53,9 @@ const interpolationSlice = createSlice({
     setStartingPoint: (state, action) => {
       state.params.startingPoint = action.payload;
     },
+    setRealFExpr: (state, action) => {
+      state.realFExpr = action.payload;
+    },
   },
 });
 
@@ -62,5 +67,6 @@ export const {
   setResult,
   setSteps,
   setStartingPoint,
+  setRealFExpr,
 } = interpolationSlice.actions;
 export default interpolationSlice.reducer;

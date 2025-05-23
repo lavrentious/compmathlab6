@@ -54,14 +54,13 @@ export function fExprToFunction(
 
 export function generatePoints(
   fn: (x: BigNumber) => BigNumber,
-  points: Point[],
+  intervalL: BigNumber,
+  intervalR: BigNumber,
 ): { xs: BigNumber[]; ys: BigNumber[] } {
-  const xMin = Math.min(...points.map((p) => +p.x));
-  const xMax = Math.max(...points.map((p) => +p.x));
   const xs: Decimal[] = [];
   const ys: Decimal[] = [];
   for (let i = 0; i <= 100; i++) {
-    const x = new Decimal(xMin + (i / 100) * (xMax - xMin));
+    const x = intervalL.plus(intervalR.minus(intervalL).times(i / 100));
     xs.push(x);
     ys.push(fn(x));
   }

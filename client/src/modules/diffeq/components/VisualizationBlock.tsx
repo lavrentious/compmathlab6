@@ -7,7 +7,9 @@ import VisualizationPlot from "./VisualizationPlot";
 import VisualizationTable from "./VisualizationTable";
 
 const VisualizationBlock = () => {
-  const { result } = useSelector((state: RootState) => state.simulation);
+  const { result, realFExpr } = useSelector(
+    (state: RootState) => state.simulation,
+  );
 
   const downloadJson = useCallback(() => {
     const json = JSON.stringify(result, null, 2);
@@ -26,7 +28,7 @@ const VisualizationBlock = () => {
       <Card.Body>
         {result ? (
           <>
-            <VisualizationPlot result={result} />
+            <VisualizationPlot result={result} realFExpr={realFExpr} />
           </>
         ) : (
           <p>No results yet</p>
