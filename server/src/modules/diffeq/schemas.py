@@ -13,7 +13,7 @@ from pydantic import (
 from sympy.parsing.sympy_parser import parse_expr  # type: ignore
 
 from config import FORMAT_STR
-from modules.diffeq.core.types import DiffEqMethod, Point
+from modules.diffeq.core.types import DiffEqMethod
 
 
 class CustomBaseModel(BaseModel):

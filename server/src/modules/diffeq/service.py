@@ -15,7 +15,6 @@ from modules.diffeq.schemas import (
 
 class DiffEqService:
     async def solve(self, data: DiffEqRequest) -> DiffEqResponse:
-        print(f"{data=}")
         solver: BaseSolver | None = None
         fn = data.to_lambda()
         point = Point(data.starting_point.x, data.starting_point.y)
@@ -29,7 +28,6 @@ class DiffEqService:
 
         try:
             res = solver.solve()
-            print(f"{res=}")
             res_data = DiffEqData(
                 points=PointsListDTO(root=[PointDTO(x=p.x, y=p.y) for p in res.points])
             )

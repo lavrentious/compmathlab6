@@ -1,8 +1,10 @@
 from typing import List
+
+import sympy as sp  # type: ignore
+
 from modules.diffeq.core.solvers.base import BaseSolver
 from modules.diffeq.core.types import DiffEqMethod, DiffEqResult, Point
-from modules.diffeq.core.utils import compute_lambda, to_sp_float
-import sympy as sp  # type: ignore
+from modules.diffeq.core.utils import compute_lambda
 
 
 class ModEulerSolver(BaseSolver):
