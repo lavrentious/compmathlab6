@@ -1,4 +1,5 @@
 import time
+
 from fastapi import HTTPException
 
 from modules.diffeq.core.solvers.adams import AdamsSolver
@@ -9,6 +10,7 @@ from modules.diffeq.core.solvers.rk4 import RK4Solver
 from modules.diffeq.core.types import DiffEqMethod, Point
 from modules.diffeq.schemas import (
     DiffEqData,
+    DiffEqMeta,
     DiffEqRequest,
     DiffEqResponse,
     PointDTO,
@@ -35,15 +37,20 @@ class DiffEqService:
 
         try:
             start_time = time.perf_counter()
-            res = solver.solve()
+            if data.epsilon is None:
+                res = solver.solve()
+            else:
+                res = solver.solve_rhunge(data.epsilon)
             res_data = DiffEqData(
                 points=PointsListDTO(root=[PointDTO(x=p.x, y=p.y) for p in res.points])
             )
+            res_meta = DiffEqMeta(h=res.h, steps=res.steps)
             return DiffEqResponse(
                 method=solver.method,
                 success=True,
                 message=None,
                 data=res_data,
+                meta=res_meta,
                 time_ms=(time.perf_counter() - start_time) * 1000,
             )
         except ValueError as e:
@@ -52,5 +59,6 @@ class DiffEqService:
                 success=False,
                 message=str(e),
                 data=None,
+                meta=None,
                 time_ms=0.0,
             )

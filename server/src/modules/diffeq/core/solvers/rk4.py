@@ -9,6 +9,7 @@ from modules.diffeq.core.utils import compute_lambda
 
 class RK4Solver(BaseSolver):
     method = DiffEqMethod.RK4
+    precision_order = 4
 
     def solve(self) -> DiffEqResult:
         points: List[Point] = [Point(self.starting_point.x, self.starting_point.y)]
@@ -21,4 +22,5 @@ class RK4Solver(BaseSolver):
             new_y = y + self.h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
             new_x = x + self.h
             points.append(Point(new_x, new_y))
-        return DiffEqResult(points=points)
+
+        return DiffEqResult(points=points, h=self.h, steps=self.steps)

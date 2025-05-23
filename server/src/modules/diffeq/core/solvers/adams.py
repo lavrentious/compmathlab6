@@ -11,6 +11,7 @@ from modules.diffeq.core.utils import compute_lambda
 
 class AdamsSolver(BaseSolver):
     method = DiffEqMethod.ADAMS
+    precision_order = 4
 
     def solve(self) -> DiffEqResult:
         aux_solver = RK4Solver(self.f, self.starting_point, self.h, min(self.steps, 3))
@@ -35,4 +36,4 @@ class AdamsSolver(BaseSolver):
             points.append(Point(x_next, y_new))
             fs.append(f_next_star)
 
-        return DiffEqResult(points=points)
+        return DiffEqResult(points=points, h=self.h, steps=self.steps)

@@ -4,6 +4,7 @@ import { InlineMath } from "react-katex";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "src/store";
 import {
+  setEpsilon,
   setH,
   setImportModalShown,
   setMethod,
@@ -16,7 +17,7 @@ import FloatInput from "./FloatInput";
 
 const ParamsBlock = () => {
   const dispatch = useAppDispatch();
-  const { method, sourceFExpr, h, steps, startingPoint } = useSelector(
+  const { method, sourceFExpr, h, steps, startingPoint, epsilon } = useSelector(
     (state: RootState) => state.simulation.params,
   );
 
@@ -97,6 +98,34 @@ const ParamsBlock = () => {
               ))}
             </Form.Select>
           </Form.Group>
+          <Form.Check
+            type="switch"
+            id="epsilon-switch"
+            label={
+              <span>
+                <InlineMath>\varepsilon</InlineMath> mode
+              </span>
+            }
+            checked={epsilon != null}
+            onChange={(e) => {
+              if (e.target.checked) {
+                dispatch(setEpsilon("0.0001"));
+              } else {
+                dispatch(setEpsilon(null));
+              }
+            }}
+          />
+          {epsilon != null && (
+            <Form.Group className="mb-2">
+              <Form.Label>
+                <InlineMath>\varepsilon</InlineMath>
+              </Form.Label>
+              <FloatInput
+                value={epsilon}
+                setValue={(v) => dispatch(setEpsilon(v))}
+              />
+            </Form.Group>
+          )}
         </Form>
       </Card.Body>
       <Card.Footer className="d-flex justify-content-end">

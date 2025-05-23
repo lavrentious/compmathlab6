@@ -8,7 +8,7 @@ import { useSolveMutation } from "../api/api";
 import { ApiError } from "../api/types";
 
 const SimulateButton = () => {
-  const { h, method, steps, sourceFExpr, startingPoint } = useSelector(
+  const { h, method, steps, sourceFExpr, startingPoint, epsilon } = useSelector(
     (state: RootState) => state.simulation.params,
   );
   const dispatch = useAppDispatch();
@@ -21,17 +21,18 @@ const SimulateButton = () => {
       starting_point: startingPoint,
       h,
       steps,
+      epsilon,
     })
       .unwrap()
       .then((data) => {
         dispatch(setResult(data));
       })
       .catch((e: ApiError) => {
-        console.log('ERRROR', e);
+        console.log("ERRROR", e);
         if (typeof e.data.detail === "string") toast.error(e.data.detail);
         else toast.error(e.data.detail.map((d) => d.msg).join("\n"));
       });
-  }, [fetch, method, sourceFExpr, startingPoint, h, steps, dispatch]);
+  }, [fetch, method, sourceFExpr, startingPoint, h, steps, epsilon, dispatch]);
 
   const disabled = useMemo(() => {
     // TODO: add validation

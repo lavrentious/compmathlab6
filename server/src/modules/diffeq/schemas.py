@@ -50,12 +50,13 @@ class DiffEqRequest(CustomBaseModel):
     h: Decimal  # step
     steps: int = Field(gt=0)
     starting_point: PointDTO
+    epsilon: Decimal | None  # required precision (optional)
 
-    @field_validator("h", mode="before")
+    @field_validator("h", "epsilon", mode="before")
     @classmethod
     def coerce_to_decimal(cls, value: str | float | Decimal) -> Decimal:
         try:
-            return Decimal(value)
+            return Decimal(value) if value is not None else None
         except Exception:
             raise ValueError(
                 "All coordinates must be floats or strings representing floats"
@@ -93,9 +94,15 @@ class DiffEqData(CustomBaseModel):
     points: PointsListDTO
 
 
+class DiffEqMeta(CustomBaseModel):
+    h: Decimal
+    steps: int
+
+
 class DiffEqResponse(CustomBaseModel):
     method: DiffEqMethod
     success: bool
     message: str | None = None
     data: DiffEqData | None
+    meta: DiffEqMeta | None
     time_ms: float

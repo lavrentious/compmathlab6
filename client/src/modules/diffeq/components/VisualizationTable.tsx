@@ -51,6 +51,19 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({ result }) => {
           </>
         )}
 
+        {result.meta && (
+          <>
+            <tr>
+              <th>Steps</th>
+              <td>{result.meta.steps}</td>
+            </tr>
+            <tr>
+              <th>h</th>
+              <td>{result.meta.h}</td>
+            </tr>
+          </>
+        )}
+
         {result.message && (
           <tr>
             <th>Message</th>

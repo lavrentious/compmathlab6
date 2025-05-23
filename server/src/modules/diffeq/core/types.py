@@ -13,6 +13,8 @@ class Point:
 @dataclass
 class DiffEqResult:
     points: List[Point]
+    h: Decimal
+    steps: int
 
 
 class DiffEqMethod(Enum):

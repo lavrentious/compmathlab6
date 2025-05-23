@@ -9,6 +9,7 @@ from modules.diffeq.core.utils import compute_lambda
 
 class ModEulerSolver(BaseSolver):
     method = DiffEqMethod.MOD_EULER
+    precision_order = 2
 
     def solve(self) -> DiffEqResult:
         points: List[Point] = [Point(self.starting_point.x, self.starting_point.y)]
@@ -21,4 +22,5 @@ class ModEulerSolver(BaseSolver):
                 compute_lambda(self.f, x, y) + compute_lambda(self.f, new_x, new_y_star)
             )
             points.append(Point(new_x, new_y))
-        return DiffEqResult(points=points)
+
+        return DiffEqResult(points=points, h=self.h, steps=self.steps)
