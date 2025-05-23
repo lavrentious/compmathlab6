@@ -6,4 +6,5 @@ export type Point = {
 export enum DiffEqMethod {
   EULER = "EULER",
   MOD_EULER = "MOD_EULER",
+  RK4 = "RK4",
 }

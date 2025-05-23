@@ -18,3 +18,4 @@ class DiffEqResult:
 class DiffEqMethod(Enum):
     EULER = "EULER"
     MOD_EULER = "MOD_EULER"
+    RK4 = "RK4"
