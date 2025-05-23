@@ -2,6 +2,7 @@ from fastapi import HTTPException
 
 from modules.diffeq.core.solvers.base import BaseSolver
 from modules.diffeq.core.solvers.euler import EulerSolver
+from modules.diffeq.core.solvers.mod_euler import ModEulerSolver
 from modules.diffeq.core.types import DiffEqMethod, Point
 from modules.diffeq.schemas import (
     DiffEqData,
@@ -20,6 +21,8 @@ class DiffEqService:
         point = Point(data.starting_point.x, data.starting_point.y)
         if data.method == DiffEqMethod.EULER:
             solver = EulerSolver(fn, point, data.h, data.steps)
+        elif data.method == DiffEqMethod.MOD_EULER:
+            solver = ModEulerSolver(fn, point, data.h, data.steps)
 
         if solver is None:
             raise HTTPException(500, "Method not implemented")
