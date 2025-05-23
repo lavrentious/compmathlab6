@@ -36,7 +36,7 @@ const VisualizationBlock = () => {
         {result && (
           <>
             <h5>DiffEq solution result</h5>
-            <VisualizationTable result={result} />
+            <VisualizationTable result={result} realFExpr={realFExpr} />
           </>
         )}
       </Card.Body>

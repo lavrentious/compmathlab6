@@ -1,15 +1,29 @@
 import "katex/dist/katex.min.css";
-import React from "react";
+import React, { useMemo } from "react";
 import { Accordion, Badge, Table } from "react-bootstrap";
 
 import { DiffEqResponse } from "../api/types";
+import { calculateError, fExprToFunction } from "../utils/utils";
 
 interface VisualizationTableProps {
   result: DiffEqResponse;
+  realFExpr?: string | null;
   precision?: number;
 }
 
-const VisualizationTable: React.FC<VisualizationTableProps> = ({ result }) => {
+const VisualizationTable: React.FC<VisualizationTableProps> = ({
+  result,
+  realFExpr,
+}) => {
+  const realFn = useMemo(() => {
+    if (!realFExpr) return null;
+    try {
+      return fExprToFunction(realFExpr);
+    } catch {
+      return null;
+    }
+  }, [realFExpr]);
+
   return (
     <Table bordered hover responsive className="mb-0">
       <tbody>
@@ -48,6 +62,12 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({ result }) => {
                 </Accordion>
               </td>
             </tr>
+            {realFn && (
+              <tr>
+                <th>Error</th>
+                <td>{calculateError(realFn, result.data.points).toString()}</td>
+              </tr>
+            )}
           </>
         )}
 
