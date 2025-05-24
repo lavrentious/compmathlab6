@@ -70,7 +70,9 @@ const ParamsBlock = () => {
                 </Form.Label>
                 <FloatInput
                   value={startingPoint.x}
-                  setValue={(v) => dispatch(setStartingPoint({ x: v, y: "0" }))}
+                  setValue={(v) =>
+                    dispatch(setStartingPoint({ x: v, y: startingPoint.y }))
+                  }
                 />
               </Form.Group>
             </Col>
@@ -81,7 +83,9 @@ const ParamsBlock = () => {
                 </Form.Label>
                 <FloatInput
                   value={startingPoint.y}
-                  setValue={(v) => dispatch(setStartingPoint({ x: "0", y: v }))}
+                  setValue={(v) =>
+                    dispatch(setStartingPoint({ x: startingPoint.x, y: v }))
+                  }
                 />
               </Form.Group>
             </Col>
