@@ -49,9 +49,8 @@ const ExtrasBlock = () => {
   }, [debouncedFExpr]);
 
   useEffect(() => {
-    if (fn && fExpr === debouncedFExpr) {
-      dispatch(setRealFExpr(fExpr));
-    }
+    if (fExpr !== debouncedFExpr) return;
+    dispatch(setRealFExpr(fn ? fExpr : null));
   }, [fn, fExpr, debouncedFExpr, dispatch]);
 
   useEffect(() => {
