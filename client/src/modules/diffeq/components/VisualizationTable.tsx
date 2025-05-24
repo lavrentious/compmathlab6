@@ -58,7 +58,9 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({
               <td colSpan={2}>
                 <Accordion>
                   <Accordion.Item eventKey="0">
-                    <Accordion.Header>points</Accordion.Header>
+                    <Accordion.Header>
+                      points ({result.data.points.length} items)
+                    </Accordion.Header>
                     <Accordion.Body>
                       <Table striped bordered hover size="sm" responsive>
                         <thead>
