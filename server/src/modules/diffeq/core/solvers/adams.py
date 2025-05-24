@@ -33,7 +33,8 @@ class AdamsSolver(BaseSolver):
             f_next_star = compute_lambda(self.f, x_next, y_next_star)
             y_new = y + (self.h / 24) * (9 * f_next_star + 19 * f_i - 5 * f_im1 + f_im2)
 
+            f_next = compute_lambda(self.f, x_next, y_new)
             points.append(Point(x_next, y_new))
-            fs.append(f_next_star)
+            fs.append(f_next)
 
         return DiffEqResult(points=points, h=self.h, steps=self.steps)
