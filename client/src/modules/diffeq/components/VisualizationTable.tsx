@@ -1,9 +1,10 @@
+import Decimal from "decimal.js";
 import "katex/dist/katex.min.css";
 import React, { useMemo } from "react";
 import { Accordion, Badge, Table } from "react-bootstrap";
-
+import { InlineMath } from "react-katex";
 import { DiffEqResponse } from "../api/types";
-import { calculateError, fExprToFunction } from "../utils/utils";
+import { calculateErrors, fExprToFunction } from "../utils/utils";
 
 interface VisualizationTableProps {
   result: DiffEqResponse;
@@ -14,6 +15,7 @@ interface VisualizationTableProps {
 const VisualizationTable: React.FC<VisualizationTableProps> = ({
   result,
   realFExpr,
+  precision = 6,
 }) => {
   const realFn = useMemo(() => {
     if (!realFExpr) return null;
@@ -23,6 +25,13 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({
       return null;
     }
   }, [realFExpr]);
+
+  const format = (val: string | Decimal) => new Decimal(val).toFixed(precision);
+
+  const errorValues = useMemo(() => {
+    if (!result.data || !realFn) return null;
+    return calculateErrors(realFn, result.data.points);
+  }, [result.data, realFn]);
 
   return (
     <Table bordered hover responsive className="mb-0">
@@ -37,6 +46,7 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({
             )}
           </td>
         </tr>
+
         <tr>
           <th>Used Method</th>
           <td>{result.method}</td>
@@ -48,24 +58,52 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({
               <td colSpan={2}>
                 <Accordion>
                   <Accordion.Item eventKey="0">
-                    <Accordion.Header>Points</Accordion.Header>
+                    <Accordion.Header>points</Accordion.Header>
                     <Accordion.Body>
-                      <ul>
-                        {result.data.points.map((p, i) => (
-                          <li key={i}>
-                            ({p.x} ; {p.y})
-                          </li>
-                        ))}
-                      </ul>
+                      <Table striped bordered hover size="sm" responsive>
+                        <thead>
+                          <tr>
+                            <th>
+                              <InlineMath>i</InlineMath>
+                            </th>
+                            <th>
+                              <InlineMath>x_i</InlineMath>
+                            </th>
+                            <th>
+                              <InlineMath>y_i</InlineMath>
+                            </th>
+                            {errorValues && (
+                              <th>
+                                <InlineMath>\varepsilon_i</InlineMath>
+                              </th>
+                            )}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {result.data.points.map((p, i) => (
+                            <tr key={i}>
+                              <td>{i}</td>
+                              <td>{format(p.x)}</td>
+                              <td>{format(p.y)}</td>
+                              {errorValues && <td>{format(errorValues[i])}</td>}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
               </td>
             </tr>
+
             {realFn && (
               <tr>
-                <th>Error</th>
-                <td>{calculateError(realFn, result.data.points).toString()}</td>
+                <th>total error</th>
+                <td>
+                  {calculateErrors(realFn, result.data.points)
+                    .reduce((a, b) => (a.gt(b) ? a : b), new Decimal(0))
+                    .toString()}
+                </td>
               </tr>
             )}
           </>
@@ -79,7 +117,7 @@ const VisualizationTable: React.FC<VisualizationTableProps> = ({
             </tr>
             <tr>
               <th>h</th>
-              <td>{result.meta.h}</td>
+              <td>{format(result.meta.h)}</td>
             </tr>
           </>
         )}

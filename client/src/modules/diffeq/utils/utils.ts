@@ -122,18 +122,16 @@ export function generateRange(
   return ans;
 }
 
-export function calculateError(
+export function calculateErrors(
   realFn: (x: BigNumber) => BigNumber,
   points: Point[],
-): BigNumber {
-  let ans = new Decimal(0);
+): BigNumber[] {
+  const ans: Decimal[] = [];
   for (let i = 0; i < points.length; i++) {
     const e = new Decimal(points[i].y)
       .sub(realFn(new Decimal(points[i].x)))
       .abs();
-    if (e.gt(ans)) {
-      ans = e;
-    }
+    ans.push(e);
   }
   return ans;
 }
